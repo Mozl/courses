@@ -1,4 +1,4 @@
-export function createCourse(course) {
+export function createCourseAction(course) {
   return {
     type: 'CREATE_COURSE',
     course
