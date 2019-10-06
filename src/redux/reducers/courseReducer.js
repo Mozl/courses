@@ -5,7 +5,7 @@ export default function courseReducer(state = [], action) {
     case CREATE_COURSE:
       return [...state, { ...action.course }];
     case LOAD_COURSES_SUCCESS:
-      return [...state, { ...action.courses }];
+      return action.courses;
     default:
       return state;
   }

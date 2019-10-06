@@ -8,18 +8,18 @@ export function createCourseAction(course) {
   };
 }
 
-export function loadCoursesSuccess(courses) {
+export function loadCoursesSuccessAction(courses) {
   return {
     type: LOAD_COURSES_SUCCESS,
     courses
   };
 }
 
-export function loadCourses() {
+export function loadCoursesAction() {
   return function(dispatch) {
     return CourseApi.getCourses()
       .then(courses => {
-        dispatch(loadCoursesSuccess(courses));
+        dispatch(loadCoursesSuccessAction(courses));
       })
       .catch(error => {
         throw error;
