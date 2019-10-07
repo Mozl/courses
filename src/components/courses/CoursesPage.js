@@ -1,46 +1,63 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  createCourseAction,
-  loadCoursesAction
-} from '../../redux/actions/courseActions';
+import { loadAuthorsThunk } from '../../redux/actions/authorActions';
+import { loadCoursesThunk } from '../../redux/actions/courseActions';
 import PropTypes from 'prop-types';
+import CourseList from './CourseList';
 
 class CoursesPage extends React.Component {
   componentDidMount() {
-    this.props.loadCourses().catch(e => {
-      console.log('loading courses failed', e);
-    });
+    const { courses, authors, loadAuthors, loadCourses } = this.props;
+
+    if (courses.length === 0) {
+      loadCourses().catch(error => {
+        alert('Loading courses failed' + error);
+      });
+    }
+
+    if (authors.length === 0) {
+      loadAuthors().catch(error => {
+        alert('Loading authors failed' + error);
+      });
+    }
   }
 
   render() {
     return (
       <>
         <h2>Courses</h2>
-        {this.props.courses.map(course => (
-          <div key={course.title}>{course.title}</div>
-        ))}
+        <CourseList courses={this.props.courses} />
       </>
     );
   }
 }
 
 CoursesPage.propTypes = {
+  authors: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
-  createCourse: PropTypes.func.isRequired,
-  loadCourses: PropTypes.func.isRequired
+  loadCourses: PropTypes.func.isRequired,
+  loadAuthors: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    courses: state.courses
+    courses:
+      state.authors.length === 0
+        ? []
+        : state.courses.map(course => {
+            return {
+              ...course,
+              authorName: state.authors.find(a => a.id === course.authorId).name
+            };
+          }),
+    authors: state.authors
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    createCourse: course => dispatch(createCourseAction(course)),
-    loadCourses: () => dispatch(loadCoursesAction())
+    loadCourses: () => dispatch(loadCoursesThunk()),
+    loadAuthors: () => dispatch(loadAuthorsThunk())
   };
 }
 

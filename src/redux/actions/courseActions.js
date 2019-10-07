@@ -1,25 +1,26 @@
 import { CREATE_COURSE, LOAD_COURSES_SUCCESS } from '../actions/actionTypes';
-import * as CourseApi from '../../api/courseApi';
+import * as courseApi from '../../api/courseApi';
 
-export function createCourseAction(course) {
+export function createCourse(course) {
   return {
     type: CREATE_COURSE,
     course
   };
 }
 
-export function loadCoursesSuccessAction(courses) {
+export function loadCourseSuccessAction(courses) {
   return {
     type: LOAD_COURSES_SUCCESS,
     courses
   };
 }
 
-export function loadCoursesAction() {
+export function loadCoursesThunk() {
   return function(dispatch) {
-    return CourseApi.getCourses()
+    return courseApi
+      .getCourses()
       .then(courses => {
-        dispatch(loadCoursesSuccessAction(courses));
+        dispatch(loadCourseSuccessAction(courses));
       })
       .catch(error => {
         throw error;
