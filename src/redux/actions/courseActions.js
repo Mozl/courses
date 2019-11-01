@@ -33,12 +33,12 @@ export function loadCoursesThunk() {
   };
 }
 
-export function saveCoursesThunk() {
+export function saveCoursesThunk(course) {
   return function(dispatch, getState) {
     return courseApi
-      .saveCourse()
+      .saveCourse(course)
       .then(savedCourse => {
-        course.id
+        savedCourse.id
           ? dispatch(updateCourseSuccessAction(savedCourse))
           : dispatch(createCourseSuccessAction(savedCourse));
       })

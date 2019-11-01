@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { loadAuthorsThunk } from '../../redux/actions/authorActions';
-import { loadCoursesThunk } from '../../redux/actions/courseActions';
+import {
+  loadCoursesThunk,
+  saveCoursesThunk
+} from '../../redux/actions/courseActions';
 import PropTypes from 'prop-types';
 import CourseForm from './CourseForm';
 import { newCourse } from '../../../tools/mockData';
@@ -11,6 +14,7 @@ const ManageCoursePage = ({
   authors,
   loadAuthors,
   loadCourses,
+  saveCourse,
   ...props
 }) => {
   const [course, setCourse] = useState({ ...props.course });
@@ -33,8 +37,15 @@ const ManageCoursePage = ({
   const handleChange = event => {
     const { name, value } = event.target;
     setCourse(prevCourse => ({
+      ...prevCourse,
       [name]: name === 'authorId' ? parseInt(value, 10) : value
     }));
+  };
+
+  const handleSave = event => {
+    event.preventDefault();
+    saveCourse(course);
+    console.log(props);
   };
 
   return (
@@ -43,6 +54,7 @@ const ManageCoursePage = ({
       errors={errors}
       authors={authors}
       onChange={handleChange}
+      onSave={handleSave}
     />
   );
 };
@@ -52,7 +64,8 @@ ManageCoursePage.propTypes = {
   authors: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
   loadCourses: PropTypes.func.isRequired,
-  loadAuthors: PropTypes.func.isRequired
+  loadAuthors: PropTypes.func.isRequired,
+  saveCourse: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
@@ -65,7 +78,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   loadCourses: loadCoursesThunk,
-  loadAuthors: loadAuthorsThunk
+  loadAuthors: loadAuthorsThunk,
+  saveCourse: saveCoursesThunk
 };
 
 export default connect(
