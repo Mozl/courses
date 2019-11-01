@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loadAuthorsThunk } from '../../redux/actions/authorActions';
 import { loadCoursesThunk } from '../../redux/actions/courseActions';
@@ -6,6 +7,9 @@ import PropTypes from 'prop-types';
 import CourseList from './CourseList';
 
 class CoursesPage extends React.Component {
+  state = {
+    redirectToAddCoursePage: false
+  };
   componentDidMount() {
     const { courses, authors, loadAuthors, loadCourses } = this.props;
 
@@ -25,7 +29,15 @@ class CoursesPage extends React.Component {
   render() {
     return (
       <>
+        {this.state.redirectToAddCoursePage && <Redirect to="/course" />}
         <h2>Courses</h2>
+        <button
+          style={{ marginBottom: 20 }}
+          className="btn btn-primary add-course"
+          onClick={() => this.setState({ redirectToAddCoursePage: true })}
+        >
+          Add Course
+        </button>
         <CourseList courses={this.props.courses} />
       </>
     );
